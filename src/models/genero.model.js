@@ -9,4 +9,4 @@ const generoSchema = new Schema(
     { timestamps: true, versionKey: false }
 );
 
-export default model ("Genero", autorSchema)
+export default model ("Genero", generoSchema)
