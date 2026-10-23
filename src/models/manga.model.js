@@ -1,6 +1,6 @@
 import { Schema, model } from "mongoose";
 
-const mangaSchema = new schema(
+const mangaSchema = new Schema(
     {
         titulo: { type: String, required: true, trim: true, minlength: 2, maxlenght: 120 },
         sinopsis: { type: String, trim: true, maxlenght: 1000 },
