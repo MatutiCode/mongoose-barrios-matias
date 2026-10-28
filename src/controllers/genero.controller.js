@@ -1,10 +1,11 @@
 import generoModel from "../models/genero.model.js";
 import { matchedData } from "express-validator";
 
-
 export const createGenero = async (req, res) => {
   try {
-    const genero = await generoModel.create(req.body);
+    const genero = await generoModel.create(
+      matchedData(req, { locations: ["body"] }),
+    );
     return res
       .status(201)
       .json({ msg: "genero creado correctamente", data: genero });
@@ -46,10 +47,11 @@ export const getGeneroById = async (req, res) => {
 
 export const updateGenero = async (req, res) => {
   try {
-    const genero = await generoModel.findByIdAndUpdate(req.params.id, req.body, {
-      returnDocument: "after",
-      runValidators: true,
-    });
+    const genero = await generoModel.findByIdAndUpdate(
+      req.params.id,
+      matchedData(req, { locations: ["body"] }),
+      { returnDocument: "after", runValidators: true },
+    );
     if (!genero) {
       return res.status(404).json({ msg: "Género no encontrado" });
     }

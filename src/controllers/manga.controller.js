@@ -1,11 +1,13 @@
 import animeModel from "../models/anime.model.js";
 import mangaModel from "../models/manga.model.js";
 import generoModel from "../models/genero.model.js";
-
+import { matchedData } from "express-validator";
 
 export const createManga = async (req, res) => {
   try {
-    const manga = await mangaModel.create(req.body);
+    const manga = await mangaModel.create(
+      matchedData(req, { locations: ["body"] }),
+    );
     return res
       .status(201)
       .json({ msg: "manga creado correctamente", data: manga });
@@ -53,10 +55,11 @@ export const getMangaById = async (req, res) => {
 
 export const updateManga = async (req, res) => {
   try {
-    const manga = mangaModel.findByIdAndUpdate(req.params.id, req.body, {
-      returnDocument: "after",
-      runValidators: true,
-    });
+    const manga = await mangaModel.findByIdAndUpdate(
+      req.params.id,
+      matchedData(req, { locations: ["body"] }),
+      { returnDocument: "after", runValidators: true },
+    );
     if (!manga) {
       return res.status(404).json({ msg: "manga no encontrado" });
     }
@@ -93,7 +96,6 @@ export const deleteManga = async (req, res) => {
   }
 };
 
-
 export const addGeneroToManga = async (req, res) => {
   try {
     const { mangaId, generoId } = req.params;
@@ -115,12 +117,19 @@ export const addGeneroToManga = async (req, res) => {
       .findByIdAndUpdate(
         mangaId,
         { $addToSet: { generos: generoId } },
-        { returnDocument: "after" }
+        { returnDocument: "after" },
       )
       .populate("generos", "nombre");
 
-    return res.status(200).json({ msg: "Género agregado al manga correctamente", data: actualizado });
+    return res
+      .status(200)
+      .json({
+        msg: "Género agregado al manga correctamente",
+        data: actualizado,
+      });
   } catch (error) {
-    return res.status(500).json({ msg: "Error al agregar el género", error: error.message });
+    return res
+      .status(500)
+      .json({ msg: "Error al agregar el género", error: error.message });
   }
 };

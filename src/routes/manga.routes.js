@@ -1,19 +1,14 @@
-import { Router } from "express";
+import { validarCampos } from "../middlewares/validar.middleware.js";
 import {
-  createManga,
-  getMangas,
-  getMangaById,
-  updateManga,
-  deleteManga,
-  addGeneroToManga
-} from "../controllers/manga.controller.js";
+  createMangaValidator,
+  updateMangaValidator,
+  idMangaValidator,
+  addGeneroValidator,
+} from "../middlewares/manga.validators.js";
 
-const router = Router();
-
-router.post("/", createManga);
+router.post("/", createMangaValidator, validarCampos, createManga);
 router.get("/", getMangas);
-router.get("/:id", getMangaById);
-router.put("/:id", updateManga);
-router.delete("/:id", deleteManga);
-router.patch("/mangaId/generos/:generoId", addGeneroToManga)
-export default router;
+router.get("/:id", idMangaValidator, validarCampos, getMangaById);
+router.put("/:id", updateMangaValidator, validarCampos, updateManga);
+router.delete("/:id", idMangaValidator, validarCampos, deleteManga);
+router.patch("/:mangaId/generos/:generoId", addGeneroValidator, validarCampos, addGeneroToManga);

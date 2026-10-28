@@ -4,7 +4,7 @@ import { matchedData } from "express-validator";
 
 export const createAnime = async (req, res) => {
   try {
-    const anime = await animeModel.create(req.body);
+    const anime = await animeModel.create(matchedData(req, { locations: ["body"] }));
     return res
       .status(201)
       .json({ msg: "Anime creado correctamente", data: anime });
@@ -50,10 +50,11 @@ export const getAnimeById = async (req, res) => {
 
 export const updateAnime = async (req, res) => {
   try {
-    const anime = await animeModel.findByIdAndUpdate(req.params.id, req.body, {
-      returnDocument: "after",
-      runValidators: true,
-    });
+    const anime = await animeModel.findByIdAndUpdate(
+  req.params.id,
+  matchedData(req, { locations: ["body"] }),
+  { returnDocument: "after", runValidators: true }
+);
     if (!anime) {
       return res.status(404).json({ msg: "Anime no encontrado" });
     }
