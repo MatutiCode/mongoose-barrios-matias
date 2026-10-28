@@ -1,5 +1,7 @@
 import animeModel from "../models/anime.model.js";
 import mangaModel from "../models/manga.model.js";
+import generoModel from "../models/genero.model.js";
+
 
 export const createManga = async (req, res) => {
   try {
@@ -88,5 +90,37 @@ export const deleteManga = async (req, res) => {
     return res
       .status(500)
       .json({ msg: "Error al eliminar el manga", error: error.message });
+  }
+};
+
+
+export const addGeneroToManga = async (req, res) => {
+  try {
+    const { mangaId, generoId } = req.params;
+
+    const manga = await mangaModel.findById(mangaId);
+    if (!manga || !manga.activo) {
+      return res.status(404).json({ msg: "Manga no encontrado" });
+    }
+
+    const genero = await generoModel.findById(generoId);
+    if (!genero || !genero.activo) {
+      return res.status(404).json({ msg: "Género no encontrado" });
+    }
+    if (manga.generos.includes(generoId)) {
+      return res.status(400).json({ msg: "El manga ya tiene ese género" });
+    }
+
+    const actualizado = await mangaModel
+      .findByIdAndUpdate(
+        mangaId,
+        { $addToSet: { generos: generoId } },
+        { returnDocument: "after" }
+      )
+      .populate("generos", "nombre");
+
+    return res.status(200).json({ msg: "Género agregado al manga correctamente", data: actualizado });
+  } catch (error) {
+    return res.status(500).json({ msg: "Error al agregar el género", error: error.message });
   }
 };

@@ -16,7 +16,9 @@ export const createAutor = async (req, res) => {
 
 export const getAutores = async (req, res) => {
   try {
-    const autores = await autorModel.find({ activo: true });
+    const autores = await autorModel
+  .find({ activo: true })
+  .populate({ path: "mangas", select: "titulo estado", match: { activo: true } });
     return res
       .status(200)
       .json({ msg: "Autores obtenidos correctamente", data: autores });
