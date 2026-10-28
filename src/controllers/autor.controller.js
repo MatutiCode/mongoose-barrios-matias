@@ -1,9 +1,12 @@
 import autorModel from "../models/autor.model.js";
 import mangaModel from "../models/manga.model.js";
+import { matchedData } from "express-validator";
 
 export const createAutor = async (req, res) => {
   try {
-    const autor = await autorModel.create(req.body);
+    const autor = await autorModel.create(
+      matchedData(req, { locations: ["body"] }),
+    );
     return res
       .status(201)
       .json({ msg: "Autor creado correctamente", data: autor });
@@ -17,8 +20,12 @@ export const createAutor = async (req, res) => {
 export const getAutores = async (req, res) => {
   try {
     const autores = await autorModel
-  .find({ activo: true })
-  .populate({ path: "mangas", select: "titulo estado", match: { activo: true } });
+      .find({ activo: true })
+      .populate({
+        path: "mangas",
+        select: "titulo estado",
+        match: { activo: true },
+      });
     return res
       .status(200)
       .json({ msg: "Autores obtenidos correctamente", data: autores });
@@ -47,10 +54,11 @@ export const getAutorById = async (req, res) => {
 
 export const updateAutor = async (req, res) => {
   try {
-    const autor = await autorModel.findByIdAndUpdate(req.params.id, req.body, {
-      returnDocument: "after",
-      runValidators: true,
-    });
+    const autor = await autorModel.findByIdAndUpdate(
+      req.params.id,
+      matchedData(req, { locations: ["body"] }),
+      { returnDocument: "after", runValidators: true },
+    );
     if (!autor) {
       return res.status(404).json({ msg: "autor no encontrado" });
     }

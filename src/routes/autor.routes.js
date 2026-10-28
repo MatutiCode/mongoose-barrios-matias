@@ -1,12 +1,12 @@
-import { Router } from "express";
-import { createAutor, getAutores, getAutorById, updateAutor, deleteAutor } from "../controllers/autor.controller.js";
+import { validarCampos } from "../middlewares/validar.middleware.js";
+import {
+  createAutorValidator,
+  updateAutorValidator,
+  idAutorValidator,
+} from "../middlewares/autor.validators.js";
 
-const router = Router();
-
-router.post("/", createAutor)
-router.get("/", getAutores)
-router.get("/:id", getAutorById)
-router.put("/:id", updateAutor)
-router.delete("/:id", deleteAutor)
-
-export default router;
+router.post("/", createAutorValidator, validarCampos, createAutor);
+router.get("/", getAutores);
+router.get("/:id", idAutorValidator, validarCampos, getAutorById);
+router.put("/:id", updateAutorValidator, validarCampos, updateAutor);
+router.delete("/:id", idAutorValidator, validarCampos, deleteAutor);
