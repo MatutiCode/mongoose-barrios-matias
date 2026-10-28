@@ -1,4 +1,6 @@
 import generoModel from "../models/genero.model.js";
+import { matchedData } from "express-validator";
+
 
 export const createGenero = async (req, res) => {
   try {

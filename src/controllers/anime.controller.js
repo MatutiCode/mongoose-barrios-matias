@@ -1,4 +1,6 @@
 import animeModel from "../models/anime.model.js";
+import { matchedData } from "express-validator";
+
 
 export const createAnime = async (req, res) => {
   try {

@@ -1,12 +1,12 @@
-import { Router } from "express";
-import { createGenero, getGeneros, getGeneroById, updateGenero, deleteGenero } from "../controllers/genero.controller.js";
+import { validarCampos } from "../middlewares/validar.middleware.js";
+import {
+  createGeneroValidator,
+  updateGeneroValidator,
+  idGeneroValidator,
+} from "../middlewares/genero.validators.js";
 
-const router = Router();
-
-router.post("/", createGenero)
-router.get("/", getGeneros)
-router.get("/:id", getGeneroById)
-router.put("/:id", updateGenero)
-router.delete("/:id", deleteGenero)
-
-export default router;
+router.post("/", createGeneroValidator, validarCampos, createGenero);
+router.get("/", getGeneros);
+router.get("/:id", idGeneroValidator, validarCampos, getGeneroById);
+router.put("/:id", updateGeneroValidator, validarCampos, updateGenero);
+router.delete("/:id", idGeneroValidator, validarCampos, deleteGenero);

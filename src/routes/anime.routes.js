@@ -1,14 +1,12 @@
-import { Router } from "express";
+import { validarCampos } from "../middlewares/validar.middleware.js";
+import {
+  createAnimeValidator,
+  updateAnimeValidator,
+  idAnimeValidator,
+} from "../middlewares/anime.validators.js";
 
-import { createAnime, getAnimes, getAnimeById, updateAnime, deleteAnime } from "../controllers/anime.controller.js";
-
-
-const router = Router();
-
-router.post("/", createAnime)
-router.get("/", getAnimes)
-router.get("/:id", getAnimeById)
-router.put("/:id", updateAnime)
-router.delete("/:id", deleteAnime)
-
-export default router;
+router.post("/", createAnimeValidator, validarCampos, createAnime);
+router.get("/", getAnimes);
+router.get("/:id", idAnimeValidator, validarCampos, getAnimeById);
+router.put("/:id", updateAnimeValidator, validarCampos, updateAnime);
+router.delete("/:id", idAnimeValidator, validarCampos, deleteAnime);
